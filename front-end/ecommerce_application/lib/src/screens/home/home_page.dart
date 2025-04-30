@@ -332,7 +332,9 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductPage(productId: productId),
+            builder:
+                (context) =>
+                    ProductPage(productId: productId, token: widget.token),
           ),
         );
       },

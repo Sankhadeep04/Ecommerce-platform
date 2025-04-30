@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ProductPage extends StatefulWidget {
+  final String token;
   final int productId;
 
-  const ProductPage({super.key, required this.productId});
+  const ProductPage({super.key, required this.productId, required this.token});
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -24,15 +25,21 @@ class _ProductPageState extends State<ProductPage> {
   Future<void> fetchProduct() async {
     try {
       final response = await http.get(
-        Uri.parse(
-          'http://10.0.2.2:3000/api/products/${widget.productId}',
-        ), // Update with your actual API URL
+        Uri.parse('http://10.0.2.2:3000/api/products/${widget.productId}'),
+        headers: {
+          'Authorization': 'Bearer ${widget.token}',
+          'Content-Type': 'application/json',
+        },
       );
+
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        print('Parsed product: $data');
         setState(() {
-          product = data['product']; // Update to match your JSON structure
+          product = data['product'];
           isLoading = false;
         });
       } else {
@@ -68,7 +75,7 @@ class _ProductPageState extends State<ProductPage> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.network(
-                        product!['image_url'], // Use 'image_url' from API
+                        product!['image_url'] ?? '', // Use 'image_url' from API
                         height: 250,
                         width: double.infinity,
                         fit: BoxFit.cover,
