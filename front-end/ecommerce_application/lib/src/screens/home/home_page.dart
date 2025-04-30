@@ -90,7 +90,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
 
   Future<void> fetchProducts() async {
     final url = Uri.parse(
-      'http://localhost:3000/api/products',
+      'http://10.0.2.2:3000/api/products',
     ); // Change to production URL when needed
     try {
       final response = await http.get(

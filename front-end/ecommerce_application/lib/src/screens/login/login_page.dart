@@ -102,6 +102,8 @@ class _LoginPageState extends State<LoginPage>
       if (response.statusCode == 200) {
         final token = data['token'];
 
+        print("Received token: $token");
+
         if (token == null) {
           _showSnackbar("No token received.");
           return;
@@ -109,6 +111,10 @@ class _LoginPageState extends State<LoginPage>
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
+
+        await checkStoredToken();
+        // Debug print to check if the token is saved in SharedPreferences
+        print("Token saved in SharedPreferences: ${prefs.getString('token')}");
 
         if (!mounted) return;
 
@@ -122,8 +128,11 @@ class _LoginPageState extends State<LoginPage>
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushReplacementNamed('/home');
+                      print("✅ Navigating to /home...");
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).pushReplacementNamed('/home', arguments: token);
                     },
                     child: const Text('Continue'),
                   ),
@@ -403,5 +412,11 @@ class _LoginPageState extends State<LoginPage>
         ),
       ),
     );
+  }
+
+  Future<void> checkStoredToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    print("🔍 Stored token: $token");
   }
 }

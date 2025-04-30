@@ -25,7 +25,7 @@ class _ProductPageState extends State<ProductPage> {
     try {
       final response = await http.get(
         Uri.parse(
-          'https://yourapi.com/products/${widget.productId}',
+          'http://10.0.2.2:3000/api/products/${widget.productId}',
         ), // Update with your actual API URL
       );
 

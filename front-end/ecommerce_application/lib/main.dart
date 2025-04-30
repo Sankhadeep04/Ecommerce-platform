@@ -10,6 +10,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,8 +24,13 @@ class MyApp extends StatelessWidget {
           case '/register':
             return MaterialPageRoute(builder: (context) => const MyRegister());
           case '/home':
-            final token =
-                settings.arguments as String; // Token passed via Navigator
+            final token = settings.arguments as String?;
+            print("Navigating to home with token: $token"); // Debug print
+
+            if (token == null) {
+              // Handle error: No token found, show error or redirect to login
+              return MaterialPageRoute(builder: (context) => const LoginPage());
+            }
             return MaterialPageRoute(
               builder: (context) => HomePage(token: token),
             );
@@ -35,8 +41,7 @@ class MyApp extends StatelessWidget {
         }
       },
       theme: ThemeData(fontFamily: "SF-pro-Text"),
-      home:
-          const LoginPage(), // You can keep this or remove since initialRoute is set
+      // Removed the 'home' parameter as initialRoute handles it
     );
   }
 }
